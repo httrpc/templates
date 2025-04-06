@@ -13,9 +13,11 @@ import {{this.name}} from '{{this.path}}';
 // Types
 {{#each schema.Types}}
 export interface {{@key}} {
+  {{#if this.Properties}}
   {{#each this.Properties}}
   {{@key}}{{#unless ../Required includes=@key}}?{{/unless}}: {{#if this.Type}}{{this.Type}}{{else if this.Ref}}{{this.Ref}}{{else}}any{{/if}}{{#if this.Description}} // {{this.Description}}{{/if}}
   {{/each}}
+  {{/if}}
 }
 {{/each}}
 
