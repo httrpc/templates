@@ -1,0 +1,180 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Language Template Configuration Schema",
+  "description": "Schema for configuring language templates with type mappings and aliases",
+  "type": "object",
+  "required": ["name", "typeMapping"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Human readable name of the language (e.g., 'TypeScript', 'Golang')"
+    },
+    "aliases": {
+      "type": "array",
+      "description": "Short aliases used to refer to the language (e.g., 'ts' for TypeScript)",
+      "items": {
+        "type": "string"
+      }
+    },
+    "typeMapping": {
+      "type": "object",
+      "description": "Maps generic types to language-specific implementations",
+      "properties": {
+        "string": {
+          "type": "string",
+          "description": "Mapping for string type"
+        },
+        "boolean": {
+          "type": "string",
+          "description": "Mapping for boolean type"
+        },
+        "array": {
+          "type": "string",
+          "description": "Handlebars template for array type (e.g., '{{type}}[]')"
+        },
+        "map": {
+          "type": "string",
+          "description": "Handlebars template for map type (e.g., 'Map<{{key}}, {{value}}>')"
+        },
+        "object": {
+          "type": "string",
+          "description": "Handlebars template for object type"
+        },
+        "int8": {
+          "type": "string",
+          "description": "Mapping for 8-bit signed integer"
+        },
+        "int16": {
+          "type": "string",
+          "description": "Mapping for 16-bit signed integer"
+        },
+        "int32": {
+          "type": "string",
+          "description": "Mapping for 32-bit signed integer"
+        },
+        "int64": {
+          "type": "string",
+          "description": "Mapping for 64-bit signed integer"
+        },
+        "uint8": {
+          "type": "string",
+          "description": "Mapping for 8-bit unsigned integer"
+        },
+        "uint16": {
+          "type": "string",
+          "description": "Mapping for 16-bit unsigned integer"
+        },
+        "uint32": {
+          "type": "string",
+          "description": "Mapping for 32-bit unsigned integer"
+        },
+        "uint64": {
+          "type": "string",
+          "description": "Mapping for 64-bit unsigned integer"
+        },
+        "float32": {
+          "type": "string",
+          "description": "Mapping for 32-bit floating point"
+        },
+        "float64": {
+          "type": "string",
+          "description": "Mapping for 64-bit floating point"
+        },
+        "decimal": {
+          "type": "string",
+          "description": "Mapping for decimal/arbitrary precision number"
+        },
+        "date": {
+          "type": "string",
+          "description": "Mapping for date type"
+        },
+        "time": {
+          "type": "string",
+          "description": "Mapping for time type"
+        },
+        "datetime": {
+          "type": "string",
+          "description": "Mapping for datetime type"
+        },
+        "binary": {
+          "type": "string",
+          "description": "Mapping for binary data"
+        },
+        "any": {
+          "type": "string",
+          "description": "Mapping for any type (equivalent to 'any' in TypeScript or 'interface{}' in Go)"
+        }
+      },
+      "additionalProperties": {
+        "type": "string",
+        "description": "Handlebars template for custom type conversion"
+      },
+      "example": {
+        "string": "string",
+        "boolean": "boolean",
+        "array": "{{type}}[]",
+        "map": "Map<{{key}}, {{value}}>",
+        "object": "{ {{#each properties}} {{name}}: {{type}}{{#unless @last}}, {{/unless}}{{/each}} }",
+        "int8": "number",
+        "int16": "number",
+        "int32": "number",
+        "int64": "bigint",
+        "uint8": "number",
+        "uint16": "number",
+        "uint32": "number",
+        "uint64": "bigint",
+        "float32": "number",
+        "float64": "number",
+        "decimal": "Decimal",
+        "date": "Date",
+        "time": "Time",
+        "datetime": "Date",
+        "binary": "Uint8Array",
+        "any": "any"
+      }
+    },
+    "extensions": {
+      "type": "array",
+      "description": "File extensions associated with this language (e.g., '.ts', '.go')",
+      "items": {
+        "type": "string"
+      }
+    },
+    "formatOptions": {
+      "type": "object",
+      "description": "Optional configuration for code formatting",
+      "properties": {
+        "functionNaming": {
+          "$ref": "#/definitions/CaseTypes"
+        },
+        "propertyNaming": {
+          "$ref": "#/definitions/CaseTypes"
+        },
+        "enumNaming": {
+          "$ref": "#/definitions/CaseTypes"
+        },
+        "enumValueNaming": {
+          "$ref": "#/definitions/CaseTypes"
+        },
+        "typeNaming": {
+          "$ref": "#/definitions/CaseTypes"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "definitions": {
+    "CaseTypes": {
+      "type": "string",
+      "enum": [
+        "pascalCase",
+        "camelCase",
+        "snakeCase",
+        "kebabCase",
+        "screamingSnakeCase",
+        "lowerCase",
+        "upperCase"
+      ]
+    }
+  }
+}

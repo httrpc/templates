@@ -1,0 +1,83 @@
+/**
+ * HTTRPC TypeScript Client
+ * Generated from schema version: {{schema.Version}}
+ * Package: {{package}}
+ */
+
+{{#if config.imports}}
+{{#each config.imports}}
+import {{this.name}} from '{{this.path}}';
+{{/each}}
+{{/if}}
+
+// Types
+{{#each schema.Types}}
+export interface {{@key}} {
+  {{#each this.Properties}}
+  {{@key}}{{#unless ../Required includes=@key}}?{{/unless}}: {{#if this.Type}}{{this.Type}}{{else if this.Ref}}{{this.Ref}}{{else}}any{{/if}}{{#if this.Description}} // {{this.Description}}{{/if}}
+  {{/each}}
+}
+{{/each}}
+
+// Authentication methods
+{{#if schema.Auth}}
+type AuthOptions = {
+  {{#each schema.Auth}}
+  {{@key}}?: {
+    {{#if this.Name}}name: string;{{/if}}
+    {{#if this.In}}in: '{{this.In}}';{{/if}}
+    token: string;
+  };
+  {{/each}}
+};
+{{else}}
+type AuthOptions = Record<string, never>;
+{{/if}}
+
+export class Client {
+  private baseUrl: string;
+  private auth?: AuthOptions;
+
+  constructor(baseUrl: string, auth?: AuthOptions) {
+    this.baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+    this.auth = auth;
+  }
+
+  private async request<T>(path: string, method: string, data?: unknown, auth?: string): Promise<T> {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    // Apply authentication if specified
+    if (auth && this.auth && this.auth[auth]) {
+      const authConfig = this.auth[auth];
+      if (authConfig.in === 'header') {
+        headers[authConfig.name || 'Authorization'] = authConfig.token;
+      }
+    }
+
+    const response = await fetch(`${this.baseUrl}${path}`, {
+      method,
+      headers,
+      body: data ? JSON.stringify(data) : undefined,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+    }
+
+    return response.json() as Promise<T>;
+  }
+
+  {{#each schema.RPC}}
+  // Namespace: {{@key}}
+  {{#each this.Actions}}
+  async {{@key}}({{#if this.Input.Type}}input: {{#with this.Input.Type}}{{this.Type}}{{/with}}{{else if this.Input.Ref}}input: {{this.Input.Ref}}{{else}}input: any{{/if}}): Promise<{{#if this.Output.Type}}{{#with this.Output.Type}}{{this.Type}}{{/with}}{{else if this.Output.Ref}}{{this.Output.Ref}}{{else}}any{{/if}}> {
+    return this.request<{{#if this.Output.Type}}{{#with this.Output.Type}}{{this.Type}}{{/with}}{{else if this.Output.Ref}}{{this.Output.Ref}}{{else}}any{{/if}}>('/{{@../key}}/{{@key}}', '{{this.Type}}', input, {{#if this.Auth}}'{{this.Auth.Ref}}'{{else if ../Auth}}'{{../Auth.Ref}}'{{else}}undefined{{/if}});
+  }
+  {{/each}}
+
+  {{/each}}
+}
+
+export default Client;

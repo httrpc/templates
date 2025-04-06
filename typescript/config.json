@@ -1,0 +1,36 @@
+{
+  "$schema": "../schema.json",
+  "name": "TypeScript",
+  "aliases": ["ts", "typescript"],
+  "typeMapping": {
+    "string": "string",
+    "boolean": "boolean",
+    "array": "Array<{{type}}>",
+    "map": "Map<{{key}}, {{value}}>",
+    "object": "{\n{{#each properties}}\t{{name}}: {{type}};\n{{/each}}}",
+    "int8": "number",
+    "int16": "number",
+    "int32": "number",
+    "int64": "bigint",
+    "uint8": "number",
+    "uint16": "number",
+    "uint32": "number",
+    "uint64": "bigint",
+    "float32": "number",
+    "float64": "number",
+    "decimal": "number",
+    "date": "Date",
+    "time": "string",
+    "datetime": "Date",
+    "binary": "Uint8Array",
+    "any": "any"
+  },
+  "extensions": [".ts"],
+  "formatOptions": {
+    "functionNaming": "camelCase",
+    "propertyNaming": "camelCase",
+    "enumNaming": "pascalCase",
+    "enumValueNaming": "screamingSnakeCase",
+    "typeNaming": "pascalCase"
+  }
+}

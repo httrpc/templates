@@ -1,0 +1,36 @@
+{
+  "$schema": "../schema.json",
+  "name": "Golang",
+  "aliases": ["go"],
+  "typeMapping": {
+    "string": "string",
+    "boolean": "bool",
+    "array": "[]{{type}}",
+    "map": "map[{{key}}]{{value}}",
+    "object": "struct {\n{{#each properties}}\t{{name}} {{type}} `json:\"{{name}}\"`\n{{/each}}}",
+    "int8": "int8",
+    "int16": "int16",
+    "int32": "int32",
+    "int64": "int64",
+    "uint8": "uint8",
+    "uint16": "uint16",
+    "uint32": "uint32",
+    "uint64": "uint64",
+    "float32": "float32",
+    "float64": "float64",
+    "decimal": "float64",
+    "date": "time.Time",
+    "time": "time.Time",
+    "datetime": "time.Time",
+    "binary": "[]byte",
+    "any": "interface{}"
+  },
+  "extensions": [".go"],
+  "formatOptions": {
+    "functionNaming": "camelCase",
+    "propertyNaming": "camelCase",
+    "enumNaming": "pascalCase",
+    "enumValueNaming": "screamingSnakeCase",
+    "typeNaming": "pascalCase"
+  }
+}
